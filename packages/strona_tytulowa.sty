@@ -1,0 +1,21 @@
+
+\newif\ifdraft@mode             \draft@modefalse
+\def\draft{
+    \draft@modetrue
+}
+
+\def\stronatytulowa{
+    \vskip0.5in
+
+    \begin{center}
+ \hyphenpenalty=10000\LARGE\expandafter{\textbf{\textsc{\@title}}}
+    \end{center}
+    \vskip0.5in
+
+ 	\begin{center}
+        \hyphenpenalty=10000\Large\expandafter{\@author}
+    \end{center}
+    \vskip0.5in
+    \newpage
+
+}

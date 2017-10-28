@@ -1,0 +1,40 @@
+\documentclass[a4paper,12pt,openany]{book}
+\input{Pakiety/pakiety.tex}
+\input{ustawienia.tex}
+\author{Angelika Maria Pi¹tkowska}
+\title{C\# dla blondynki, czyli o programowaniu inaczej.}
+
+\begin{document}
+\pagenumbering{roman}
+\thispagestyle{empty}
+\stronatytulowa
+
+\thispagestyle{empty}
+\pustastrona
+\newpage
+\tableofcontents
+\myemptypage
+\listoffigures
+\myemptypage
+\listoftables
+\myemptypage
+\newcounter{licznikStron}
+\setcounter{licznikStron}{\value{page}}
+\setcounter{licznikStron}{1}
+\pagenumbering{arabic}
+\setcounter{page}{\value{licznikStron}}
+
+\input{Wstep/wstep.tex}
+%\input{Rozdzial1/rozdzial1.tex}
+
+%\begin{appendix}
+%	\appendix
+	%\input{Dodatki/dodatek_a.tex}
+	%...
+%\end{appendix}
+
+%\begin{flushleft}
+%	\bibliography{bibliografia/bibliografia}
+%\end{flushleft}
+
+\end{document}
