@@ -1,0 +1,154 @@
+\chapter{Hello world}
+O samym "hello world" mo¿na napisaæ bardzo du¿o. Wbrew pozorom du¿o siê dzieje, aby ten program zosta³ wypisany.
+\section{Kod na start}
+
+Poni¿ej macie s³awnego hello worlda. Nazywa siê tak program, jaki zwykle koder pisze, kiedy zaczyna pracê z nowym jêzykiem. Ca³oœæ polega na wypisaniu tekstu "hello world" na standardowe wyjœcie, które domyœlnie jest definiowane jako konsola.
+\lstset{language=[Sharp]C,
+   label=code:cmd,
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  escapeinside={(*@}{@*)},
+  basicstyle=\footnotesize,  
+  stringstyle=\color{red},
+  commentstyle=\color{OliveGreen},
+  keywordstyle=\color{blue}\bf,
+  columns=fullflexible,
+  morekeywords={Process},
+ emph={Console, System},emphstyle={\color{cyan}} 
+}
+\begin{lstlisting}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PierwszyProgram
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello world");
+            Console.ReadKey();
+        }
+    }
+}
+\end{lstlisting}
+Tak na prawdê napisa³am tylko liniê 13 i 14, reszta zosta³a dla mnie wygenerowana przez projekt konsolowy. Pierwsze co siê rzuca w oczy, to using. Kilka z nich jest na szaro, a to oznacza, ¿e mo¿emy je bez problemów usun¹æ. Mamy teraz coœ takiego:
+\begin{lstlisting}
+using System;
+namespace PierwszyProgram
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello world");
+            Console.ReadKey();
+        }
+    }
+}
+\end{lstlisting}
+Zosta³ nam tylko jeden using. Ale na upartego i jego mo¿emy usun¹æ, acz musimy nieco zmodyfikowaæ kod, aby siê on skompilowa³.
+\begin{lstlisting}
+namespace PierwszyProgram
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            System.Console.WriteLine("Hello world");
+            System.Console.ReadKey();
+        }
+    }
+}
+\end{lstlisting}
+Mo¿na ca³oœæ napisaæ jeszcze inaczej. Tak trochê dla fanów nowinek technicznych, bo kiedyœ nie mo¿na tak by³o napisaæ.
+\begin{lstlisting}
+using static System.Console;
+namespace PierwszyProgram
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            WriteLine("Hello world");
+            ReadKey();
+        }
+    }
+}
+\end{lstlisting}
+
+Z ciekawych elementów jakie mo¿na tu opisaæ nale¿y wymieniæ:
+\begin{itemize}
+\item funkcja,
+\item wywo³anie funkcji,
+\item s³owo kluczowe using,
+\item s³owo kluczowe namespace,
+\item klasa,
+\item s³owo kluczowe static,
+\item standardowe wejœcie i wyjœcie - konsola,
+\item funkcja Main,
+\item entry point programu,
+\item kompilacja i uruchomienie.
+\end{itemize}
+
+Tak¿e tym (niekoniecznie w tej kolejnoœci) siê bêdziemy spokojnie mogli zaj¹æ w pierwszym rozdziale.
+
+\section{Funkcja}
+Program bez funcji by nie istnia³, bo po co tworzyæ program, który nic nie robi. Ka¿dy z nich ma jak¹œ funkcjê, chyba ¿e jedyn¹ funkcj¹ programu jest to, ¿e ma siê uruchomiæ;) Ale aby siê uruchomi³, musi byæ jakaœ funkcja, no nie da siê inaczej. W przypadku C\# ta funkcja musi byæ umieszczona w jakiejœ klasie, ale nie wyprzedzajmy faktów. 
+Zacznijmy od tego, w jaki sposób funkcjê mo¿na wywo³aæ.
+Najproœciej mo¿na przedstawiæ jako 
+Funkcja(parametry);
+gdzie nazwa jest nazw¹ funkcji, zaœ parametry s¹ to informacje jakie podajemy funkcji. Na koñcu jest œrednik. Œrednik mówi programowi, ¿e skoñczyliœmy jeden "krok" programu.
+Kiedy chcemy poznaæ wynik dzia³ania naszej funkcji, to (je¿eli zwraca wartoœæ) robimy
+
+wynik = Funkcja(parametry);
+
+Kiery mamy wiele parametrów, to je rozdzielamy przecinkami. Jak znamy nazwê mo¿emy j¹ podaæ przed dwukropkiem. Co nam da
+
+wynik = Funkcja(parametr1, parametr2, parametr3);
+
+albo
+
+wynik = Funkcja(par1:parametr1, par2:parametr2, par3:parametr3);\\
+
+Tak, wygl¹da trochê jak funkcja matematyczna i nic dziwnego. Ów zapis w jêzykach c-like by³ w³aœnie na tym wzorowany.
+
+To co mo¿e zainteresowaæ bezpieczników czy mi³oœników optymalizacji, to kolejnoœæ przekazywania parametrów na stos. Programiœci c++ maj¹ doœæ spory wybór, o czym mo¿na przeczytaæ na msdn pod adresem \url{https://msdn.microsoft.com/pl-pl/library/984x0h58.aspx} my, programiœci c\# niekoniecznie.
+Jak mo¿na przeczytaæ w \cite{ECMA-334} "During the run-time processing of a function member invocation (§7.5.4), the expressions or variable references of an argument list are evaluated in order, from left to right, (...)"  czyli zawsze mamy od lewej do prawej, czyli taki c++owy  \_\_clrcall. Wiêcej mo¿na przeczytaæ na \url{https://www.ecma-international.org/publications/files/ECMA-ST/Ecma-334.pdf}. Najlepiej zapisz sobie ten plik, bo bêdziemy do niego czêsto wracaæ.
+
+To teraz spójrzmy na deklaracjê metody. Najogólniej by³oby to:
+
+[atrybut] specyfikator\_dostêpu rodzaj wartoœæ\_zwracana nazwa(parametry) {
+  Tu wpisz jakiœ kod;
+}
+
+Zaznaczê tylko, ¿e wielkoœæ liter (o ile nie napisano inaczej) ma znaczenie, wiêc funkcja o nazwie GetItem() i getItem() to dwie zupe³nie inne funkcje.
+
+Mo¿na elementy pomijaæ, jednak kolejnoœæ ich zawsze musi byæ taka jak powy¿ej.
+Atrybutami nie bêdziemy siê teraz zajmowaæ, dociekliwych odsy³am do \url{http://plukasiewicz.net/Csharp_dla_zaawansowanych/Atrybuty} gdzie mo¿na o tym poczytaæ.
+Specyfikatory dostêpu to kolejno:
+\begin{description}
+\item[public] Mo¿na wywo³aæ metodê wszêdzie (oczywiœcie na zewn¹trz assembly trzeba dodaæ referencjê w projekcie)
+\item[private] Mo¿na wywo³aæ wy³¹cznie w tej samej klasie, w której jest metoda. Przydatne przy enkapsulacji\footnote{Przyda siê jak bêdziemy omawiaæ programowanie obiektowe}.
+\item[protected] Mo¿na wywo³aæ w klasie, oraz jej dzieciach (klasach dziedzicz¹cych po...).
+\item[internal] Mo¿na wywo³aæ z poziomu tego konkretnego assembly
+\item[protected internal] Zlepka dwóch poprzednich. Czyli jak w tym samym asembly to zewsz¹d, jak w innym, to tylko klasy dziedzicz¹ce.
+\end{description}
+
+Rodzaj, w tym schemacie to s³ówka takie jak static (wywo³ywane na rzecz klasy, nie obiektu), override (nadpisanie funkcji), new (przys³oniêcie funkcji), virtual (deklaracja funkcji któr¹ mo¿na nadpisaæ), abstract (funkcja bez cia³a w klasach abstrakcyjnych) itd.
+
+wartoœæ zwracana, to wynik funkcji. Je¿eli nie zwracamy nic, wpisujemy void. Je¿eli zwracamy, to wpisujemy tutaj odpowiedni typ- albo predefiniowany, albo swój, ale typ musi istnieæ. Przyk³ady typów predefiniowanych to bool (prawda/fa³sz), int (liczba ca³kowita), float (;iczba zmiennoprzecinkowa), string(napis). Pe³na ich lista znajduje siê na \url{https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/built-in-types-table}
+
+O parametrach napisa³am wy¿ej. Dodam, ¿e domyœlnie s¹ one przekazywane przez wartoœæ w przypadku typów wartoœciowych (value type) oraz przez referencjê w przypadku typów referencyjnych (reference type). Je¿eli chcemy zaœ zawsze przekazaæ przez referencjê, to przed parametrem dajemy ref lub out. Out nam inicjalizuje po wejœciu, a ref u¿ywa aktualnej wartoœci (wiêc musimy zainicjalizowaæ tak¹ zmienn¹ przed jej wys³aniem do funkcji).
+
+Wracaj¹c do funkcji abstrakcyjnej (zwanej inaczej czysto wirtualn¹) to jest ona trochê œmieszna. Jej przyk³ad to:\\
+public abstract void ZaimplementujMnie();\\
+czyli œrednik od razu po nawiasach z parametrami, ¿adnych klamerek.
+
+Ok, to ju¿ deklaracjê ka¿dy bêdzie umia³ przeczytaæ. Na razie o funkcjach wystarczy, z pewnoœci¹ wrócimy jeszcze do tego tematu.
