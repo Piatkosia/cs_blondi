@@ -151,4 +151,58 @@ Wracaj¹c do funkcji abstrakcyjnej (zwanej inaczej czysto wirtualn¹) to jest ona 
 public abstract void ZaimplementujMnie();\\
 czyli œrednik od razu po nawiasach z parametrami, ¿adnych klamerek.
 
-Ok, to ju¿ deklaracjê ka¿dy bêdzie umia³ przeczytaæ. Na razie o funkcjach wystarczy, z pewnoœci¹ wrócimy jeszcze do tego tematu.
+Ok, to ju¿ deklaracjê ka¿dy bêdzie umia³ przeczytaæ. Na razie o funkcjach wystarczy, z pewnoœci¹ wrócimy jeszcze do tego tematu. Zajmijmy siê kolejnym ciekawym zagadnieniem.
+\section{Using i dllki}
+Using tak na prawdê od strony wykonania programu nic nie robi. Czy wiêc jest leniwy? Niekoniecznie, ale powsta³ po to, abyœmy to my mogli byæ leniwi. Oszczêdza nam czas pisania na klawiaturze- co pokazuj¹ s³owa kluczowe powy¿ej. O ile przy dwóch linijkach dodawanie s³ówka System nie stanowi³o wiêkszego problemu, o tyle w skali du¿ej aplikacji powtarzanie w kó³ko tego samego okazuje siê zbêdne. Projektanci jêzyka dobrze znaj¹ zasadê DRY - Don't repeat yourself i pozwolili j¹ wdro¿yæ nawet na takim poziomie. 
+
+Using nie jest analogi¹ do s³ówka import z innych jêzyków. Jak widaæ by³o powy¿ej, mo¿e tych usingów wcale nie byæ. S³ówko nie ³aduje do pamiêci ¿adnych modu³ów, a jedynie pozwala na skrócenie zapisu. Niezale¿nie od ich istnienia mamy dostêp do wszystkich funkcji jêzyka, oraz do podpiêtych bibliotek .dll.
+
+Using nie jest te¿ odpowiednikiem s³ówka include znanego z c++, ¿adnych plików z nag³ówkami bowiem nie wkleja na pocz¹tek danego pliku. Mamy informacje o typach z naszego assembly oraz o typach do których dodaliœmy referencje bezpoœrednio w nag³ówkach, które mo¿na bezpoœrednio odczytaæ z naszego pliku .exe czy .dll. Wiêc using przypomina nieco frazê using namespace z c++, ale tylko w odniesieniu do przestrzeni nazw. Nie ma odpowiednika dla wywo³ywania funkcji statycznych (chyba, ¿e dodali od czasów, kiedy ostatnio mia³am ten jêzyk przed oczami, jakieœ 5 lat temu).
+
+Aktualnie dodane dllki mo¿esz podejrzeæ w nastêpuj¹cy sposób:
+\begin{enumerate}
+\item Otwórz solution explorer (tam, gdzie s¹ pokazane pliki z projektu). Je¿eli znikn¹³ ci z oczu, daj ctrl+alt+l
+\item Rozwiñ listê "references"
+\item kliknij dwa razy któr¹œ z dodanych referencji (od pocz¹tku jest ich kilka)
+\item uruchomi³ ci siê object explorer. Porozwijaj sobie listy po lewej i poklikaj
+\end{enumerate}
+
+Kolejne zadanie to zrobiæ to samo z dowolnie wybran¹ bibliotek¹.
+\begin{enumerate}
+\item Kliknij prawym na "references"
+\item Kliknij "add reference"
+\item Wybierz dowoln¹ bibliotekê z dysku lub z listy
+\item Powtórz dla niej kroki z listy powy¿ej
+\end{enumerate}
+
+Teraz ju¿ wiesz drogi czytelniku w jaki sposób dowiedzieæ siê jakie funkcja ma typy, funkcje, propertiesy i tak dalej. Skoro ty jesteœ w stanie to doœæ prosto odczytaæ, to tym bardziej platforma.
+
+Usingi na pocz¹tku pliku (using xx odnosi siê do namespace'ów, using static do klas statycznych) pomagaj¹ nam w szybszym pisaniu. Ale jest jeszcze jedno zastosowanie s³ówka using, które u³atwia nam ¿ycie, a ponad to pozwala na unikniêcie wycieków pamiêci i blokowania zasobów. U¿ywa siê go ju¿ wewn¹trz funkcji i przedstawia siê nastêpuj¹co:
+\begin{lstlisting}
+using (Zasobozerca obiekt = new Zasobozerca())
+{
+    obiekt.RobRobote();
+}
+\end{lstlisting}
+co jest przez kompilator rozwijane do takiego kodu:
+\begin{lstlisting}
+{ 
+    Zasobozerca obiekt = new Zasobozerca()
+    try
+    {
+        obiekt.RobRobote();
+    }
+    finally
+    {
+        if (obiekt!= null)
+            ((IDisposable)myRes).Dispose();
+    }
+}
+\end{lstlisting}
+Obecnie mo¿e byæ on dla Ciebie nieczytelny, ale zrozumiesz go ju¿ wkrótce. Teraz tylko powiem, ¿e kod powy¿ej sprz¹ta po zasobo¿ercy, pod warunkiem, ¿e ten implementuje IDisposable. Oczywiœcie funkcja .Dispose() mo¿e robiæ cokolwiek, ale programiœci umówili siê, ¿e tak bêd¹ nazywaæ funkcjê, która sprz¹ta po obiekcie, kiedy ju¿ zakoñczy swoj¹ pracê.
+
+Jednak leniwi programiœci zapominali wywo³ywaæ t¹ funkcjê, co powodowa³o, ¿e pamiêæ ciek³a, pliki by³y blokowane, wolne porty sieciowe siê koñczy³y i tak dalej. Wprowadzono zatem u³atwienie sk³adniowe, aby dbanie o zasoby mniej bola³o.
+
+Tak¿e using nie jest leniwy, zaœ pozwala nam na pewne lenistwo.
+
+\section{S³owo kluczowe namespace}
